@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import '../components/FullTimetable/FullTimetable.css'; // Will overwrite specific styles in Generator styles
 import coursesData from '../courses.json';
+import studentCoursesData from '../studentCourses.json';
+import Navbar from '../components/Navbar/Navbar';
 import TimetableGrid from '../components/Timetable/TimetableGrid';
 import EditTiming from '../components/FullTimetable/EditTiming';
 
@@ -35,72 +37,21 @@ export default function Generator() {
     const [autoFetchLoading, setAutoFetchLoading] = useState(false);
     const [fetchLog, setFetchLog] = useState("");
 
-    const handleAutoFetch = async () => {
-        if (!kerberosId.trim()) return;
+    const handleAutoFetch = () => {
+        if (!kerberosId) {
+            setFetchLog("Please enter a Kerberos ID.");
+            return;
+        }
 
         setAutoFetchLoading(true);
-        setFetchLog("Starting scan...");
+        setFetchLog("Checking student database...");
 
         try {
-            // 1. Fetch the main list page using the proxy
-            setFetchLog("Fetching course list...");
-            // Add timestamp to prevent caching of previous redirects
-            const response = await fetch(`/LDAP/courses/gpaliases.html?t=${Date.now()}`);
-            if (!response.ok) throw new Error("Failed to reach IITD LDAP server");
+            // Lookup in the pre-fetched JSON
+            const lowerId = kerberosId.toLowerCase();
+            const foundCourses = studentCoursesData[lowerId];
 
-            const htmlText = await response.text();
-
-            // 2. Parse all course links
-            const courseLinkRegex = /href="([^"]+)"/g;
-            const matches = [...htmlText.matchAll(courseLinkRegex)];
-
-            // Filter for course pages starting with 2502-
-            const currentSemPrefix = "2502-";
-            const courseLinks = matches
-                .map(m => m[1])
-                .filter(link => link.startsWith(currentSemPrefix))
-                .filter(link => link.includes('.shtml') || link.includes('.html'));
-
-            setFetchLog(`Found ${courseLinks.length} course pages for semester ${currentSemPrefix.replace('-', '')}. Scanning for ${kerberosId}...`);
-
-            let foundCourses = [];
-            const BATCH_SIZE = 50; // Scan 50 pages at a time for speed
-
-            for (let i = 0; i < courseLinks.length; i += BATCH_SIZE) {
-                const batch = courseLinks.slice(i, i + BATCH_SIZE);
-                setFetchLog(`Scanning courses ${i + 1} to ${Math.min(i + BATCH_SIZE, courseLinks.length)} of ${courseLinks.length}...`);
-
-                await Promise.all(batch.map(async (link) => {
-                    try {
-                        const courseRes = await fetch(`/LDAP/courses/${link}`);
-                        if (courseRes.ok) {
-                            const courseHtml = await courseRes.text();
-                            if (courseHtml.toLowerCase().includes(kerberosId.toLowerCase())) {
-                                // Extract course code from filename or content
-                                // link format example: 2302-MTL103.shtml or 2102-CML101.shtml
-                                let courseCode = "";
-
-                                // Try extracting from link first
-                                const linkMatch = link.match(/-([A-Z0-9]+)\./);
-                                if (linkMatch) {
-                                    courseCode = linkMatch[1];
-                                } else {
-                                    // Fallback text search if needed (simple heuristic)
-                                    // But usually filename is reliable
-                                }
-
-                                if (courseCode) {
-                                    foundCourses.push(courseCode);
-                                }
-                            }
-                        }
-                    } catch (err) {
-                        console.warn(`Failed to fetch ${link}`, err);
-                    }
-                }));
-            }
-
-            if (foundCourses.length > 0) {
+            if (foundCourses && foundCourses.length > 0) {
                 setFetchLog(`Success! Found: ${foundCourses.join(", ")}`);
                 // Add found courses in a batch
                 addCourses(foundCourses);
@@ -112,13 +63,13 @@ export default function Generator() {
                     setAutoFetchLoading(false);
                 }, 1500);
             } else {
-                setFetchLog("No courses found for this Kerberos ID.");
+                setFetchLog("No courses found for this Kerberos ID in the database.");
                 setAutoFetchLoading(false);
             }
 
         } catch (error) {
             console.error("Auto fetch error:", error);
-            setFetchLog(`Error: ${error.message}. Make sure you are connected to IITD VPN if running locally without proxy setup, or that the proxy is working.`);
+            setFetchLog(`Error: ${error.message}`);
             setAutoFetchLoading(false);
         }
     };
