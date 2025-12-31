@@ -29,6 +29,100 @@ export default function Generator() {
     const [expandedCourse, setExpandedCourse] = useState(null);
     const timetableRef = useRef(null);
 
+    // Auto Fetch State
+    const [showAutoFetchModal, setShowAutoFetchModal] = useState(false);
+    const [kerberosId, setKerberosId] = useState("");
+    const [autoFetchLoading, setAutoFetchLoading] = useState(false);
+    const [fetchLog, setFetchLog] = useState("");
+
+    const handleAutoFetch = async () => {
+        if (!kerberosId.trim()) return;
+
+        setAutoFetchLoading(true);
+        setFetchLog("Starting scan...");
+
+        try {
+            // 1. Fetch the main list page using the proxy
+            setFetchLog("Fetching course list...");
+            // Add timestamp to prevent caching of previous redirects
+            const response = await fetch(`/LDAP/courses/gpaliases.html?t=${Date.now()}`);
+            if (!response.ok) throw new Error("Failed to reach IITD LDAP server");
+
+            const htmlText = await response.text();
+
+            // 2. Parse all course links
+            const courseLinkRegex = /href="([^"]+)"/g;
+            const matches = [...htmlText.matchAll(courseLinkRegex)];
+
+            // Filter for course pages starting with 2502-
+            const currentSemPrefix = "2502-";
+            const courseLinks = matches
+                .map(m => m[1])
+                .filter(link => link.startsWith(currentSemPrefix))
+                .filter(link => link.includes('.shtml') || link.includes('.html'));
+
+            setFetchLog(`Found ${courseLinks.length} course pages for semester ${currentSemPrefix.replace('-', '')}. Scanning for ${kerberosId}...`);
+
+            let foundCourses = [];
+            const BATCH_SIZE = 50; // Scan 50 pages at a time for speed
+
+            for (let i = 0; i < courseLinks.length; i += BATCH_SIZE) {
+                const batch = courseLinks.slice(i, i + BATCH_SIZE);
+                setFetchLog(`Scanning courses ${i + 1} to ${Math.min(i + BATCH_SIZE, courseLinks.length)} of ${courseLinks.length}...`);
+
+                await Promise.all(batch.map(async (link) => {
+                    try {
+                        const courseRes = await fetch(`/LDAP/courses/${link}`);
+                        if (courseRes.ok) {
+                            const courseHtml = await courseRes.text();
+                            if (courseHtml.toLowerCase().includes(kerberosId.toLowerCase())) {
+                                // Extract course code from filename or content
+                                // link format example: 2302-MTL103.shtml or 2102-CML101.shtml
+                                let courseCode = "";
+
+                                // Try extracting from link first
+                                const linkMatch = link.match(/-([A-Z0-9]+)\./);
+                                if (linkMatch) {
+                                    courseCode = linkMatch[1];
+                                } else {
+                                    // Fallback text search if needed (simple heuristic)
+                                    // But usually filename is reliable
+                                }
+
+                                if (courseCode) {
+                                    foundCourses.push(courseCode);
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        console.warn(`Failed to fetch ${link}`, err);
+                    }
+                }));
+            }
+
+            if (foundCourses.length > 0) {
+                setFetchLog(`Success! Found: ${foundCourses.join(", ")}`);
+                // Add found courses in a batch
+                addCourses(foundCourses);
+
+                // Close modal after short delay
+                setTimeout(() => {
+                    setShowAutoFetchModal(false);
+                    setFetchLog("");
+                    setAutoFetchLoading(false);
+                }, 1500);
+            } else {
+                setFetchLog("No courses found for this Kerberos ID.");
+                setAutoFetchLoading(false);
+            }
+
+        } catch (error) {
+            console.error("Auto fetch error:", error);
+            setFetchLog(`Error: ${error.message}. Make sure you are connected to IITD VPN if running locally without proxy setup, or that the proxy is working.`);
+            setAutoFetchLoading(false);
+        }
+    };
+
     useEffect(() => {
         setAllCourses(coursesData);
     }, []);
@@ -56,36 +150,50 @@ export default function Generator() {
         });
     };
 
-    const addCourse = (courseCode) => {
-        // Prevent adding if already selected
-        if (selectedCourses.find(c => c.courseCode === courseCode)) return;
+    // Batch add courses to prevent state overwrite race conditions
+    const addCourses = (courseCodes) => {
+        const newCourses = [];
+        const newTimetableUpdates = {};
 
-        const course = allCourses.find(c => c.courseCode === courseCode);
-        if (course) {
-            setTimetableData(prev => ({
-                ...prev,
-                [courseCode]: {
+        courseCodes.forEach(courseCode => {
+            // Check if already selected (both in current state and in our temp batch list)
+            if (selectedCourses.find(c => c.courseCode === courseCode) || newCourses.find(c => c.courseCode === courseCode)) return;
+
+            const course = allCourses.find(c => c.courseCode === courseCode);
+            if (course) {
+                newTimetableUpdates[courseCode] = {
                     lecture: parseTimingStr(course.slot.lectureTiming),
                     tutorial: null,
                     lab: null
-                }
+                };
+
+                const gridCourse = {
+                    courseCode: course.courseCode,
+                    lecture: !!course.slot.lectureTiming,
+                    tutorial: course.creditStructure.split('-')[1] !== "0.0",
+                    lab: course.creditStructure.split('-')[2] !== "0.0",
+                    lectureTiming: parseTimingStr(course.slot.lectureTiming),
+                    tutorialTiming: parseTimingStr(course.slot.tutorialTiming),
+                    labTiming: parseTimingStr(course.slot.labTiming),
+                    creditStructure: course.creditStructure,
+                    lectureHall: course.lectureHall // Add lectureHall
+                };
+                newCourses.push(gridCourse);
+            }
+        });
+
+        if (newCourses.length > 0) {
+            setTimetableData(prev => ({
+                ...prev,
+                ...newTimetableUpdates
             }));
-
-            const gridCourse = {
-                courseCode: course.courseCode,
-                lecture: !!course.slot.lectureTiming,
-                tutorial: course.creditStructure.split('-')[1] !== "0.0",
-                lab: course.creditStructure.split('-')[2] !== "0.0",
-                lectureTiming: parseTimingStr(course.slot.lectureTiming),
-                tutorialTiming: parseTimingStr(course.slot.tutorialTiming),
-                labTiming: parseTimingStr(course.slot.labTiming),
-                creditStructure: course.creditStructure,
-                lectureHall: course.lectureHall // Add lectureHall
-            };
-
-            setSelectedCourses([...selectedCourses, gridCourse]);
+            setSelectedCourses(prev => [...prev, ...newCourses]);
             setSearchQuery("");
         }
+    };
+
+    const addCourse = (courseCode) => {
+        addCourses([courseCode]);
     };
 
     const removeCourse = (courseCode) => {
@@ -193,33 +301,66 @@ export default function Generator() {
 
             {/* Search Bar */}
             <div style={{ maxWidth: '700px', margin: '0 auto 60px auto', position: 'relative' }}>
-                <div style={{
-                    position: 'relative',
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                    borderRadius: '20px'
-                }}>
-                    <input
-                        type="text"
-                        placeholder="Search for courses (e.g., COL106, ELL201)..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{
+                        position: 'relative',
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        borderRadius: '20px',
+                        flexGrow: 1
+                    }}>
+                        <input
+                            type="text"
+                            placeholder="Search for courses (e.g., COL106, ELL201)..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '20px 30px',
+                                fontSize: '1.1rem',
+                                border: '1px solid #e2e8f0',
+                                borderRadius: '20px',
+                                outline: 'none',
+                                transition: 'all 0.2s',
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                backdropFilter: 'blur(10px)'
+                            }}
+                            onFocus={(e) => e.target.style.borderColor = '#6366f1'}
+                            onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                        />
+                        <div style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => setShowAutoFetchModal(true)}
                         style={{
-                            width: '100%',
-                            padding: '20px 30px',
-                            fontSize: '1.1rem',
+                            background: 'white',
+                            color: '#6366f1',
                             border: '1px solid #e2e8f0',
                             borderRadius: '20px',
-                            outline: 'none',
-                            transition: 'all 0.2s',
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                            backdropFilter: 'blur(10px)'
+                            padding: '0 25px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap',
+                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'all 0.2s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#6366f1'}
-                        onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                    />
-                    <div style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>
-                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = '#6366f1';
+                            e.currentTarget.style.background = '#f8fafc';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#e2e8f0';
+                            e.currentTarget.style.background = 'white';
+                        }}
+                    >
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        Auto-Fetch
+                    </button>
                 </div>
 
                 {searchQuery && (
@@ -270,6 +411,100 @@ export default function Generator() {
                     </div>
                 )}
             </div>
+
+            {/* Auto Fetch Modal */}
+            {showAutoFetchModal && (
+                <div style={{
+                    position: 'fixed', inset: 0,
+                    background: 'rgba(0,0,0,0.5)',
+                    backdropFilter: 'blur(5px)',
+                    zIndex: 100,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }} onClick={(e) => {
+                    if (e.target === e.currentTarget) setShowAutoFetchModal(false);
+                }}>
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '24px',
+                        width: '90%', maxWidth: '450px',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                    }}>
+                        <h2 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.5rem', color: '#1e293b' }}>
+                            Auto-Fetch Courses
+                        </h2>
+                        <p style={{ color: '#64748b', marginBottom: '20px', lineHeight: '1.5' }}>
+                            Enter your Kerberos ID (e.g., mt123456) to automatically find and add your courses from the LDAP directory.
+                        </p>
+
+                        <input
+                            type="text"
+                            placeholder="Kerberos ID (e.g. mt1230456)"
+                            value={kerberosId}
+                            onChange={(e) => setKerberosId(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '15px 20px',
+                                fontSize: '1rem',
+                                border: '2px solid #e2e8f0',
+                                borderRadius: '12px',
+                                marginBottom: '20px',
+                                outline: 'none'
+                            }}
+                            onFocus={(e) => e.target.style.borderColor = '#6366f1'}
+                            onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                        />
+
+                        {fetchLog && (
+                            <div style={{
+                                background: '#f8fafc',
+                                padding: '12px',
+                                borderRadius: '8px',
+                                fontSize: '0.85rem',
+                                color: '#475569',
+                                marginBottom: '20px',
+                                maxHeight: '100px',
+                                overflowY: 'auto'
+                            }}>
+                                {fetchLog}
+                            </div>
+                        )}
+
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={() => setShowAutoFetchModal(false)}
+                                disabled={autoFetchLoading}
+                                style={{
+                                    padding: '12px 24px',
+                                    borderRadius: '12px',
+                                    border: 'none',
+                                    background: '#f1f5f9',
+                                    color: '#475569',
+                                    fontWeight: '600',
+                                    cursor: autoFetchLoading ? 'not-allowed' : 'pointer'
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleAutoFetch}
+                                disabled={autoFetchLoading || !kerberosId}
+                                style={{
+                                    padding: '12px 24px',
+                                    borderRadius: '12px',
+                                    border: 'none',
+                                    background: autoFetchLoading ? '#94a3b8' : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                    color: 'white',
+                                    fontWeight: '600',
+                                    cursor: autoFetchLoading ? 'wait' : 'pointer'
+                                }}
+                            >
+                                {autoFetchLoading ? 'Fetching...' : 'Fetch Courses'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Main Content Area */}
             <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '30px', alignItems: 'start' }} className="responsive-grid">

@@ -18,13 +18,14 @@ export default function EditTiming(props) {
             let tutDay = master_div.querySelector(`#select-tut-day-${courseCode}`).value;
             let tutStart = master_div.querySelector(`#tut-start-${courseCode}`).value;
             let tutEnd = master_div.querySelector(`#tut-end-${courseCode}`).value;
+            let tutVenue = master_div.querySelector(`#tut-venue-${courseCode}`).value;
 
             if (tutDay !== "0") {
                 temp.tutorial = [{
                     day: tutDay,
                     start: tutStart.replace(":", ""),
                     end: tutEnd.replace(":", ""),
-                    room: data.lectureHall // Assuming same room or user might want to edit this too later? For now keeping simple.
+                    location: tutVenue // Save custom venue
                 }]
                 if (temp.tutorial[0].start >= temp.tutorial[0].end) {
                     // Simple validation
@@ -39,11 +40,14 @@ export default function EditTiming(props) {
             let labDay = master_div.querySelector(`#select-lab-day-${courseCode}`).value;
             let labStart = master_div.querySelector(`#lab-start-${courseCode}`).value;
             let labEnd = master_div.querySelector(`#lab-end-${courseCode}`).value;
+            let labVenue = master_div.querySelector(`#lab-venue-${courseCode}`).value;
+
             if (labDay !== "0") {
                 temp.lab = [{
                     day: labDay,
                     start: labStart.replace(":", ""),
-                    end: labEnd.replace(":", "")
+                    end: labEnd.replace(":", ""),
+                    location: labVenue // Save custom venue
                 }]
                 if (temp.lab[0].start >= temp.lab[0].end) {
                     temp.lab = null;
@@ -86,6 +90,10 @@ export default function EditTiming(props) {
                         <input type="time" name="tut-end" id={`tut-end-${data.courseCode}`} />
                     </div>
                 </div>
+                <div className="select-lab-time-comp" style={{ marginTop: '10px' }}>
+                    <p>Venue</p>
+                    <input type="text" placeholder="e.g. IIA 201" id={`tut-venue-${data.courseCode}`} style={{ width: '100%', padding: '5px' }} />
+                </div>
             </div> : null}
 
             {data.lab ? <div className="edit-timing-section">
@@ -107,6 +115,10 @@ export default function EditTiming(props) {
                         <p>End Time</p>
                         <input type="time" name="lab-end" id={`lab-end-${data.courseCode}`} />
                     </div>
+                </div>
+                <div className="select-lab-time-comp" style={{ marginTop: '10px' }}>
+                    <p>Venue</p>
+                    <input type="text" placeholder="e.g. LH 111" id={`lab-venue-${data.courseCode}`} style={{ width: '100%', padding: '5px' }} />
                 </div>
             </div> : null}
 

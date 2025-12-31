@@ -3700,7 +3700,7 @@
     "creditStructure": "0.0-0.0-3.0",
     "slot": {
       "name": "E",
-      "lectureTiming": "210001100,310001100,510001100",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -8217,7 +8217,7 @@
     "creditStructure": "0.0-0.0-3.0",
     "slot": {
       "name": "D",
-      "lectureTiming": "209001000,309001000,509001000",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -8229,7 +8229,7 @@
     "creditStructure": "0.0-0.0-3.0",
     "slot": {
       "name": "E",
-      "lectureTiming": "210001100,310001100,510001100",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -8241,7 +8241,7 @@
     "creditStructure": "0.0-0.0-2.0",
     "slot": {
       "name": "C",
-      "lectureTiming": "208000900,308000900,508000900",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -10961,7 +10961,7 @@
     "creditStructure": "0.0-0.0-3.0",
     "slot": {
       "name": "D",
-      "lectureTiming": "209001000,309001000,509001000",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -10973,7 +10973,7 @@
     "creditStructure": "0.0-0.0-3.0",
     "slot": {
       "name": "E",
-      "lectureTiming": "210001100,310001100,510001100",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -10985,7 +10985,7 @@
     "creditStructure": "0.0-0.0-2.0",
     "slot": {
       "name": "B",
-      "lectureTiming": "109301100,409301100",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }
@@ -11673,7 +11673,7 @@
     "creditStructure": "0.0-0.0-4.0",
     "slot": {
       "name": "D",
-      "lectureTiming": "209001000,309001000,509001000",
+      "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
     }

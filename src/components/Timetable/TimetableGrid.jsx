@@ -73,13 +73,13 @@ export default function TimetableGrid(props) {
                     return (
                         <React.Fragment key={course.courseCode}>
                             {data[course.courseCode].lab ? data[course.courseCode].lab.map((lab, i) => {
-                                return <TimetableElement key={`lab-${i}`} data={lab} course={course.courseCode} lectureHall={course.lectureHall} type="Lab" />;
+                                return <TimetableElement key={`lab-${i}`} data={lab} course={course.courseCode} lectureHall={lab.location} type="Lab" />;
                             }) : null}
                             {data[course.courseCode].lecture ? data[course.courseCode].lecture.map((lecture, i) => {
                                 return <TimetableElement key={`lec-${i}`} data={lecture} course={course.courseCode} lectureHall={course.lectureHall} type="Lecture" />;
                             }) : null}
                             {data[course.courseCode].tutorial ? data[course.courseCode].tutorial.map((tutorial, i) => {
-                                return <TimetableElement key={`tut-${i}`} data={tutorial} course={course.courseCode} lectureHall={course.lectureHall} type="Tutorial" />;
+                                return <TimetableElement key={`tut-${i}`} data={tutorial} course={course.courseCode} lectureHall={tutorial.location} type="Tutorial" />;
                             }) : null}
                         </React.Fragment>
                     )
