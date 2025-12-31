@@ -53,8 +53,8 @@ export default function Generator() {
 
             if (foundCourses && foundCourses.length > 0) {
                 setFetchLog(`Success! Found: ${foundCourses.join(", ")}`);
-                // Add found courses in a batch
-                addCourses(foundCourses);
+                // Add found courses in a batch, clearing existing courses
+                addCourses(foundCourses, true);
 
                 // Close modal after short delay
                 setTimeout(() => {
@@ -102,13 +102,14 @@ export default function Generator() {
     };
 
     // Batch add courses to prevent state overwrite race conditions
-    const addCourses = (courseCodes) => {
+    const addCourses = (courseCodes, clearExisting = false) => {
         const newCourses = [];
         const newTimetableUpdates = {};
 
         courseCodes.forEach(courseCode => {
             // Check if already selected (both in current state and in our temp batch list)
-            if (selectedCourses.find(c => c.courseCode === courseCode) || newCourses.find(c => c.courseCode === courseCode)) return;
+            if (!clearExisting && selectedCourses.find(c => c.courseCode === courseCode)) return;
+            if (newCourses.find(c => c.courseCode === courseCode)) return;
 
             const course = allCourses.find(c => c.courseCode === courseCode);
             if (course) {
@@ -134,11 +135,14 @@ export default function Generator() {
         });
 
         if (newCourses.length > 0) {
-            setTimetableData(prev => ({
-                ...prev,
-                ...newTimetableUpdates
-            }));
-            setSelectedCourses(prev => [...prev, ...newCourses]);
+            setTimetableData(prev => {
+                if (clearExisting) return newTimetableUpdates;
+                return { ...prev, ...newTimetableUpdates };
+            });
+            setSelectedCourses(prev => {
+                if (clearExisting) return newCourses;
+                return [...prev, ...newCourses];
+            });
             setSearchQuery("");
         }
     };
