@@ -12,7 +12,12 @@ export default function Navbar() {
                     </Link>
                 </h1>
             </div>
+            <div className="navbar-links">
+                <Link to="/empty-halls" style={{ marginLeft: '20px', textDecoration: 'none', color: '#555', fontWeight: '500' }}>
+                    Empty Halls
+                </Link>
+            </div>
             {/* Removed DevClub branding */}
-        </nav>
+        </nav >
     )
 }
