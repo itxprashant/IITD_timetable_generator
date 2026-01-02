@@ -12,9 +12,13 @@ except ImportError:
     print("Please install it using: pip install PyPDF2")
     sys.exit(1)
 
+import urllib.request
+import ssl
+
 # --- CONFIGURATION ---
 JSON_PATH = os.path.join(os.path.dirname(__file__), '../src/courses.json')
-PDF_PATH = os.path.join(os.path.dirname(__file__), '../Room_Allotment_Chart_2025_2026_2.pdf')
+PDF_URL = "https://web.iitd.ac.in/~tti/timetable/Room_Allotment_Chart_2025_2026_2.pdf"
+LOCAL_PDF_PATH = os.path.join(os.path.dirname(__file__), '../Room_Allotment_Chart_2025_2026_2.pdf')
 
 # Regex patterns
 COURSE_REGEX = r"\b([A-Z]{3}\d{3,4}[A-Z]?)\b"
@@ -136,12 +140,31 @@ def update_json(json_path, pdf_data):
     else:
         print("No changes needed. courses.json is already up to date.")
 
-def main():
-    if not os.path.exists(PDF_PATH):
-        print(f"Error: PDF not found at {PDF_PATH}")
-        return
+def download_pdf(url, local_path):
+    print(f"Downloading PDF from {url}...")
+    try:
+        # Create unverified context to avoid SSL errors with some institute sites
+        context = ssl._create_unverified_context()
+        with urllib.request.urlopen(url, context=context) as response, open(local_path, 'wb') as out_file:
+            data = response.read()
+            out_file.write(data)
+        print(f"Downloaded to {local_path}")
+        return True
+    except Exception as e:
+        print(f"Error downloading PDF: {e}")
+        return False
 
-    pdf_data = parse_pdf(PDF_PATH)
+def main():
+    # Always attempt download
+    if not download_pdf(PDF_URL, LOCAL_PDF_PATH):
+        print("Download failed.")
+        if os.path.exists(LOCAL_PDF_PATH):
+            print(f"Falling back to existing local file: {LOCAL_PDF_PATH}")
+        else:
+            print("No local file to fall back on. Exiting.")
+            return
+
+    pdf_data = parse_pdf(LOCAL_PDF_PATH)
     if not pdf_data:
         print("No venue data found in PDF.")
         return
