@@ -1,8 +1,17 @@
-# Getting Started with Create React App
+# IITD Timetable Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive timetable management tool designed for IIT Delhi students. This application streamlines the process of creating, visualizing, and managing academic schedules.
 
-## Available Scripts
+### Key Features
+
+*   **Automatic Course Fetching:** Fetches registered courses directly using your Kerberos ID.
+*   **Interactive Timetable Grid:** Visualizes your weekly schedule with a clear, color-coded grid.
+*   **Venue Synchronization:** Automatically updates lecture halls and venues based on the latest semester data.
+*   **Manual Customization:** Allows manual addition of courses and editing of slot timings.
+*   **Clash Detection:** Highlights conflicting slots to help you plan your schedule effectively.
+*   **Export Options:** Download your timetable as a PDF or image for offline access.
+
+## Getting Started
 
 In the project directory, you can run:
 
@@ -14,61 +23,35 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
 ## AWS Deployment
 
 For instructions on deploying this application to AWS using Nginx and Certbot (Docker or Manual), please refer to the [Deployment Guide](deploy/README.md).
 
-### `npm run build` fails to minify
+## Updating for a New Semester
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+To update the application for a new semester, follow these steps:
+
+1.  **Update Course List:**
+    -   Download the `Courses_Offered.csv` file for the new semester.
+    -   Place it in the root directory of the project, replacing the existing one.
+    -   Run the `csv_to_json.py` script to generate the `courses.json` file.
+        ```bash
+        python3 scripts/csv_to_json.py
+        ```
+
+2.  **Update Venue Allotment:**
+    -   Find the URL for the "Room Allotment Chart" PDF for the new semester (usually on the IITD Timetable website).
+    -   Open `scripts/sync_venues.py`.
+    -   Update the `PDF_URL` variable with the new link.
+    -   Run the script to sync venues.
+        ```bash
+        python3 scripts/sync_venues.py
+        ```
+
+3.  **Update Student Courses:**
+    -   Open `scripts/fetch_student_courses.js`.
+    -   Update the `SEMESTER_PREFIX` variable with the new semester code (e.g., '2502-' for 2nd Sem 2024-25).
+    -   Run the script to fetch student course registrations.
+        ```bash
+        node scripts/fetch_student_courses.js
+        ```
