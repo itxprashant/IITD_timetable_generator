@@ -309,7 +309,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 603"
+    "lectureHall": "III 336"
   },
   {
     "courseCode": "AML820",
@@ -605,7 +605,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 313.2"
+    "lectureHall": "LH 313.1"
   },
   {
     "courseCode": "APL402",
@@ -2392,7 +2392,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 413.1"
+    "lectureHall": "LH 619"
   },
   {
     "courseCode": "BML810",
@@ -2970,7 +2970,8 @@
       "lectureTiming": "414001530,114001530",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 313.2"
   },
   {
     "courseCode": "RDL7761",
@@ -3187,7 +3188,8 @@
       "lectureTiming": "109301100,409301100",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "III LT 2"
   },
   {
     "courseCode": "CHL7507",
@@ -3237,7 +3239,8 @@
       "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "III LT 3"
   },
   {
     "courseCode": "CHN8703",
@@ -3458,7 +3461,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 316, LH 605"
+    "lectureHall": "LH 316"
   },
   {
     "courseCode": "CLL251B",
@@ -3497,7 +3500,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 408, LH 604"
+    "lectureHall": "II LT 3, LH 408"
   },
   {
     "courseCode": "CLL361",
@@ -3868,7 +3871,8 @@
       "lectureTiming": "111001200,311001200,412001300",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 605"
   },
   {
     "courseCode": "CML6082",
@@ -4021,7 +4025,8 @@
       "lectureTiming": "111001200,311001200,412001300",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 605"
   },
   {
     "courseCode": "CML7042",
@@ -4149,7 +4154,8 @@
       "lectureTiming": "111001200,311001200,412001300",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 605"
   },
   {
     "courseCode": "CML742",
@@ -4161,7 +4167,8 @@
       "lectureTiming": "210001100,310001100,510001100",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 313.4"
   },
   {
     "courseCode": "CML760",
@@ -4174,7 +4181,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "III LT 2"
+    "lectureHall": "LH 313.3"
   },
   {
     "courseCode": "CMN7099",
@@ -4910,7 +4917,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "II LT 3"
+    "lectureHall": "LH 621"
   },
   {
     "courseCode": "CVL7460",
@@ -4936,7 +4943,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 622"
+    "lectureHall": "IV 323"
   },
   {
     "courseCode": "CVL760",
@@ -5001,7 +5008,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "II LT 3"
+    "lectureHall": "LH 621"
   },
   {
     "courseCode": "CVL769",
@@ -5234,7 +5241,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 622"
+    "lectureHall": "IV 323"
   },
   {
     "courseCode": "CVL848",
@@ -5904,7 +5911,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 108"
+    "lectureHall": "LH 111"
   },
   {
     "courseCode": "COL632",
@@ -5982,7 +5989,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 108"
+    "lectureHall": "LH 111"
   },
   {
     "courseCode": "COL7361",
@@ -6479,7 +6486,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "V 344"
+    "lectureHall": "II LT 3"
   },
   {
     "courseCode": "JRL7680",
@@ -7611,7 +7618,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 413.4"
+    "lectureHall": "IIA 305"
   },
   {
     "courseCode": "ELL7283",
@@ -7779,7 +7786,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "II 336"
+    "lectureHall": "LH421"
   },
   {
     "courseCode": "ELL7380",
@@ -7792,7 +7799,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "II 336"
+    "lectureHall": "LH421"
   },
   {
     "courseCode": "ELL7411",
@@ -7805,7 +7812,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 413.4"
+    "lectureHall": "IIA 305"
   },
   {
     "courseCode": "ELL7420",
@@ -8434,7 +8441,8 @@
       "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 521"
   },
   {
     "courseCode": "ELS310",
@@ -8675,7 +8683,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "III LT 2, LH 413.2"
+    "lectureHall": "III 339, III LT 2, V793"
   },
   {
     "courseCode": "ESL262",
@@ -8766,7 +8774,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "III 342, LH 605"
+    "lectureHall": "III 342"
   },
   {
     "courseCode": "ESL373",
@@ -8792,7 +8800,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH421"
+    "lectureHall": "LH 602"
   },
   {
     "courseCode": "ESL7176",
@@ -8920,7 +8928,8 @@
       "lectureTiming": "111001200,311001200,412001300",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "III 336"
   },
   {
     "courseCode": "ESL774",
@@ -8996,7 +9005,8 @@
       "lectureTiming": "208000900,308000900,508000900",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 622"
   },
   {
     "courseCode": "ESN7001",
@@ -9191,7 +9201,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "III LT 1, LH 603"
+    "lectureHall": "III LT 1"
   },
   {
     "courseCode": "HSL5066",
@@ -9216,7 +9226,8 @@
       "lectureTiming": "414001530,114001530",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 620"
   },
   {
     "courseCode": "HSL581",
@@ -9678,7 +9689,8 @@
       "lectureTiming": "415301700,115301700",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 313.5"
   },
   {
     "courseCode": "HSL834",
@@ -9847,7 +9859,8 @@
       "lectureTiming": "414001530,114001530",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 620"
   },
   {
     "courseCode": "HSV7204",
@@ -9898,7 +9911,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 408"
+    "lectureHall": "LH 408, LH 521, LH422"
   },
   {
     "courseCode": "HUL232",
@@ -10054,7 +10067,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "II LT 2"
+    "lectureHall": "VI LT 1"
   },
   {
     "courseCode": "HUL374",
@@ -10745,7 +10758,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 313.4"
+    "lectureHall": "LH 604"
   },
   {
     "courseCode": "MLL264",
@@ -10784,7 +10797,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 413.2"
+    "lectureHall": "LH 611"
   },
   {
     "courseCode": "MLL7002",
@@ -11380,7 +11393,8 @@
       "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 521"
   },
   {
     "courseCode": "MTL507",
@@ -11638,7 +11652,8 @@
       "lectureTiming": "415301700,115301700",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 621"
   },
   {
     "courseCode": "MTL7761",
@@ -12026,7 +12041,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 518"
+    "lectureHall": "LH 517"
   },
   {
     "courseCode": "MCL361",
@@ -12052,7 +12067,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 603"
+    "lectureHall": "LH 604"
   },
   {
     "courseCode": "MCL421",
@@ -12077,7 +12092,8 @@
       "lectureTiming": null,
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "III LT 3"
   },
   {
     "courseCode": "MCL732",
@@ -12115,7 +12131,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "V 344"
+    "lectureHall": "II LT 3"
   },
   {
     "courseCode": "MCL775",
@@ -12167,7 +12183,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 604"
+    "lectureHall": "III LT 3"
   },
   {
     "courseCode": "MCL817",
@@ -12491,7 +12507,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 603"
+    "lectureHall": "LH 604"
   },
   {
     "courseCode": "MEL7126",
@@ -12724,7 +12740,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 604"
+    "lectureHall": "III LT 3"
   },
   {
     "courseCode": "MEL7432",
@@ -13712,7 +13728,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 510, LH 517, LH 521"
+    "lectureHall": "LH 510, LH 521"
   },
   {
     "courseCode": "PYL1012",
@@ -13907,7 +13923,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 413.5, LH 622"
+    "lectureHall": "LH 313.5, LH 622"
   },
   {
     "courseCode": "PYL560",
@@ -14037,7 +14053,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "III 360"
+    "lectureHall": "III LT 2"
   },
   {
     "courseCode": "PYL7123",
@@ -14140,7 +14156,8 @@
       "lectureTiming": "312001300,217001800,517001800",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 313.2"
   },
   {
     "courseCode": "PYL7190",
@@ -14243,7 +14260,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 614"
+    "lectureHall": "LH 602, LH 614"
   },
   {
     "courseCode": "PYL742",
@@ -14294,7 +14311,8 @@
       "lectureTiming": "312001300,217001800,517001800",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 313.2"
   },
   {
     "courseCode": "PYL749",
@@ -14664,7 +14682,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 313.1"
+    "lectureHall": "LH 316"
   },
   {
     "courseCode": "AIL7026",
@@ -14716,7 +14734,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 313.1"
+    "lectureHall": "LH 316"
   },
   {
     "courseCode": "AIL8022",
@@ -15201,7 +15219,8 @@
       "lectureTiming": "112001300,212001300,512001300",
       "tutorialTiming": null,
       "labTiming": null
-    }
+    },
+    "lectureHall": "LH 605"
   },
   {
     "courseCode": "SBL733",
@@ -16620,7 +16639,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 313.3, LH 527"
+    "lectureHall": "LH 527"
   },
   {
     "courseCode": "MSL720",
@@ -16681,7 +16700,7 @@
       "tutorialTiming": null,
       "labTiming": null
     },
-    "lectureHall": "LH 111, LH 308, LH 313.2, LH 313.4, LH 318, LH 413.2, LH 413.4, LH 416, LH 418, LH 512"
+    "lectureHall": "LH 111, LH 308, LH 313.4, LH 318, LH 413.2, LH 413.4, LH 416, LH 418, LH 512"
   },
   {
     "courseCode": "MTL101",
