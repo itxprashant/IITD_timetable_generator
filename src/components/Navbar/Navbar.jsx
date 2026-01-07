@@ -16,6 +16,9 @@ export default function Navbar() {
                 <Link to="/empty-halls" style={{ marginLeft: '20px', textDecoration: 'none', color: '#555', fontWeight: '500' }}>
                     Empty Halls
                 </Link>
+                <Link to="/course-explorer" style={{ marginLeft: '20px', textDecoration: 'none', color: '#555', fontWeight: '500' }}>
+                    Course Explorer
+                </Link>
             </div>
             {/* Removed DevClub branding */}
         </nav >

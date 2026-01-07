@@ -32,6 +32,7 @@ async function fetchCourses() {
 
         // 3. Fetch each course page and build mapping
         const studentCourses = {}; // kerberos -> [courseCodes]
+        const courseStudents = {}; // courseCode -> [kerberos]
         const BATCH_SIZE = 50;
 
         for (let i = 0; i < links.length; i += BATCH_SIZE) {
@@ -48,62 +49,45 @@ async function fetchCourses() {
                     if (!courseRes.ok) return;
                     const courseText = await courseRes.text();
 
-                    // Extract all words that look like Kerberos IDs (e.g. 3 lowercase letters + numbers, or just alphanumeric)
-                    // Simple heuristic: split by non-alphanumeric, filter for length, or better:
-                    // Look for the specific table entries if possible, or just scan words.
-                    // The pages usually list IDs. Let's assume standard format text.
-                    // Regex for Kerberos: [a-z0-9]+ usually.
-                    // Let's grab everything that looks like a username from the body.
-                    // But to be safer, let's look for the known pattern if possible or just parse loosely.
-                    // Only parsing words that appear in the visible text might be enough.
+                    // Parse HTML Table for ID and Name
+                    // Pattern: <TR><TD ALIGN=LEFT>sahasudipan</TD>\n<TD>Sudipan Saha</TD>
+                    // We can use a regex to capture this pair.
+                    const rowRegex = /<TR><TD[^>]*>([a-z0-9]+)<\/TD>\s*<TD>([^<]+)<\/TD>/gi;
+                    let rowMatch;
 
-                    // Actually, let's just use a simple regex for typical kerberos IDs (e.g. "cs1234567" or "mtt...").
-                    // A broad regex for words: \b[a-z]{2,3}[0-9]{2}[0-9a-z]{4,}\b might be too specific.
-                    // Let's try matching specific pattern from typical IITD LDAP pages.
-                    // They are often in `uid=...` or just plain text lists.
+                    while ((rowMatch = rowRegex.exec(courseText)) !== null) {
+                        const kid = rowMatch[1].trim().toLowerCase();
+                        const name = rowMatch[2].trim();
 
-                    // FALLBACK: Match everything that looks like a Kerberos ID.
-                    // Format: [a-z0-9] but usually starts with dept code.
-                    // Let's just collect all strings that matches ^[a-z0-9]+$? No too broad.
-
-                    // Inspecting existing logic: "courseHtml.toLowerCase().includes(kerberosId.toLowerCase())"
-                    // This implies we don't need to parse perfectly, just match.
-                    // BUT for reverse index key, we NEED effective parsing.
-
-                    // Let's assume the page contains IDs separated by whitespace or in tags.
-                    // Valid kerberos: 3 letters + 2 numbers + ... e.g. "mcs232323", "ch1190123"
-                    // Also faculty codes.
-
-                    // Simple approach: Extract all alphanumeric strings of length 8-12 approx?
-                    // Or scrape by HTML structure if consistent.
-                    // Given I cannot see the page structure, robust tokenization is best.
-
-                    // Let's try a regex that captures common IITD kerberos formats:
-                    // [a-z]{2,3}[0-9]{2}[0-9a-z]* (e.g., cs123, mt123456)
-
-                    const idRegex = /[a-z]{2,3}[0-9]{2}[0-9a-z]*/gi;
-                    const potentialIds = courseText.match(idRegex) || [];
-
-                    // Filter duplicates and valid looking ones
-                    new Set(potentialIds).forEach(id => {
-                        const kid = id.toLowerCase();
-                        if (kid.length >= 5) { // min length filter
+                        // Heuristic check for valid ID length
+                        if (kid.length >= 5) {
+                            // Update student -> courses
                             if (!studentCourses[kid]) studentCourses[kid] = [];
                             if (!studentCourses[kid].includes(courseCode)) {
                                 studentCourses[kid].push(courseCode);
                             }
-                        }
-                    });
 
+                            // Update course -> students
+                            if (!courseStudents[courseCode]) courseStudents[courseCode] = [];
+                            // Check if student already added (by ID)
+                            if (!courseStudents[courseCode].find(s => s.id === kid)) {
+                                courseStudents[courseCode].push({ id: kid, name: name });
+                            }
+                        }
+                    }
                 } catch (err) {
                     console.error(`Error processing ${link}:`, err.message);
                 }
             }));
         }
 
-        // 4. Save to file
+        // 4. Save to files
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(studentCourses, null, 2));
         console.log(`Successfully saved courses for ${Object.keys(studentCourses).length} students to ${OUTPUT_FILE}`);
+
+        const COURSE_STUDENTS_FILE = path.join(__dirname, '../src/courseStudents.json');
+        fs.writeFileSync(COURSE_STUDENTS_FILE, JSON.stringify(courseStudents, null, 2));
+        console.log(`Successfully saved students for ${Object.keys(courseStudents).length} courses to ${COURSE_STUDENTS_FILE}`);
 
     } catch (error) {
         console.error('Fatal error:', error);

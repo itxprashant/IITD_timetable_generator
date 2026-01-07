@@ -94,6 +94,14 @@ def parse_timings(time_str):
         
     return ",".join(encoded_timings)
 
+def extract_course_name(name_str):
+    # "MINOR PROJECT-AMD5050" -> "MINOR PROJECT"
+    if not name_str: return ""
+    parts = name_str.rsplit('-', 1)
+    if len(parts) > 1:
+        return parts[0].strip()
+    return name_str.strip()
+
 def main():
     if not os.path.exists(INPUT_CSV):
         print(f"Error: {INPUT_CSV} not found.")
@@ -112,7 +120,7 @@ def main():
             if not s_no.isdigit():
                 continue
             
-            course_name = row[1].strip()
+            raw_course_name = row[1].strip()
             
             # 2. Find Units Column (Format: d-d-d or d.d-d.d-d.d)
             units_idx = -1
@@ -189,7 +197,8 @@ def main():
                      if len(row) > 9: tutorial_str = row[9].strip()
                      if len(row) > 10: practical_str = row[10].strip()
 
-            code = clean_course_code(course_name)
+            code = clean_course_code(raw_course_name)
+            name = extract_course_name(raw_course_name)
             if not code: continue
             
             # Slot is usually index 3, but let's check relative to Units
@@ -211,14 +220,29 @@ def main():
 
             _, total_credits = parse_credit_structure(units)
             
+            # Extract Instructor (Column before Email)
+            instructor = "N/A"
+            if email_idx != -1 and email_idx > 0:
+                instructor = row[email_idx-1].strip()
+            
+            # Extract Current Strength (Last column usually)
+            current_strength = "N/A"
+            # It seems Current Strength is the last column
+            if len(row) > 0:
+                current_strength = row[-1].strip()
+
             course_obj = {
                 "courseCode": code,
+                "courseName": name,
                 "semesterCode": "2502",
                 "totalCredits": total_credits,
                 "creditStructure": units,
+                "instructor": instructor,
+                "currentStrength": current_strength,
                 "slot": {
                     "name": slot_name if slot_name else "X",
                     "lectureTiming": parse_timings(lecture_str),
+                    "lectureTimingStr": lecture_str,
                     "tutorialTiming": None,
                     "labTiming": None
                 },

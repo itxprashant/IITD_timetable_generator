@@ -1,0 +1,194 @@
+.course-details-page {
+    padding: 100px 5% 2rem;
+    min-height: 80vh;
+    background-color: #f8f9fa;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: #6366f1;
+}
+
+.course-header-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    border: 1px solid #e5e7eb;
+}
+
+.cd-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.cd-title-block h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.cd-course-name {
+    font-size: 1.25rem;
+    color: #4b5563;
+    margin: 0;
+    font-weight: 500;
+}
+
+.cd-credits-badge {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.cd-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.cd-info-item h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #9ca3af;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem 0;
+}
+
+.cd-info-item p {
+    font-size: 1.1rem;
+    color: #1f2937;
+    margin: 0;
+    font-weight: 500;
+}
+
+.students-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.student-count {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.students-table-container {
+    overflow-x: auto;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    color: #374151;
+}
+
+.students-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 2px solid #e5e7eb;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
+.students-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.students-table tr:last-child td {
+    border-bottom: none;
+}
+
+.students-table tr:hover {
+    background-color: #f9fafb;
+}
+
+.row-index {
+    color: #9ca3af;
+    width: 50px;
+}
+
+.student-name {
+    font-weight: 500;
+    color: #111827;
+}
+
+.student-id {
+    font-family: monospace;
+    color: #6b7280;
+}
+
+.no-students {
+    color: #6b7280;
+    font-style: italic;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .students-section {
+        padding: 1.5rem;
+    }
+
+    .students-table th,
+    .students-table td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .cd-header-top {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cd-info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
