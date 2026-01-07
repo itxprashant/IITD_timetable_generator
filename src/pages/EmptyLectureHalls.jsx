@@ -6,14 +6,18 @@ import './EmptyLectureHalls.css'; // Assuming we'll create a CSS file for stylin
 const EmptyLectureHalls = () => {
     const [emptyHalls, setEmptyHalls] = useState([]);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [isCustomTime, setIsCustomTime] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentTime(new Date());
+            if (!isCustomTime) {
+                setCurrentTime(new Date());
+            }
         }, 60000); // Update every minute
 
         return () => clearInterval(timer);
-    }, []);
+    }, [isCustomTime]);
 
     useEffect(() => {
         const calculateEmptyHalls = () => {
@@ -98,15 +102,58 @@ const EmptyLectureHalls = () => {
     }, [currentTime]);
 
     const formatTime = (date) => {
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    };
+
+    const handleTimeClick = () => {
+        setShowTimePicker(true);
+    };
+
+    const handleTimeChange = (e) => {
+        const [hours, minutes] = e.target.value.split(':');
+        const newTime = new Date(currentTime);
+        newTime.setHours(parseInt(hours));
+        newTime.setMinutes(parseInt(minutes));
+        setCurrentTime(newTime);
+        setIsCustomTime(true);
+        setShowTimePicker(false);
+    };
+
+    const handleReset = () => {
+        setIsCustomTime(false);
+        setCurrentTime(new Date());
+        setShowTimePicker(false);
     };
 
     return (
         <div className="empty-halls-container">
             <h2>Empty Lecture Halls</h2>
             <div className="time-info-container">
-                <p className="current-time">Current Time: {formatTime(currentTime)}</p>
+                {showTimePicker ? (
+                    <input
+                        type="time"
+                        className="time-picker"
+                        value={`${String(currentTime.getHours()).padStart(2, '0')}:${String(currentTime.getMinutes()).padStart(2, '0')}`}
+                        onChange={handleTimeChange}
+                        onBlur={() => setShowTimePicker(false)}
+                        autoFocus
+                    />
+                ) : (
+                    <div onClick={handleTimeClick} style={{ cursor: 'pointer' }}>
+                        <p className="current-time" style={{ textDecoration: 'underline' }}>
+                            Current Time: {formatTime(currentTime)}
+                        </p>
+                        <p style={{ fontSize: '0.8rem', color: '#888', margin: '2px 0 0 0' }}>
+                            (Click to change)
+                        </p>
+                    </div>
+                )}
                 <p className="day-info">{['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][currentTime.getDay()]}</p>
+                {isCustomTime && (
+                    <button className="reset-button" onClick={handleReset}>
+                        Reset to Now
+                    </button>
+                )}
             </div>
 
             {emptyHalls.length > 0 ? (
