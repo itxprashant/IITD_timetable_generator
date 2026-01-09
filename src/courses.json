@@ -6231,8 +6231,8 @@
     "currentStrength": "296",
     "slot": {
       "name": "C1",
-      "lectureTiming": "208000900,308000900,508000900",
-      "lectureTimingStr": "TWF 08:00-09:00",
+      "lectureTiming": "208000900,308000900",
+      "lectureTimingStr": "TW 08:00-09:00",
       "tutorialTiming": null,
       "labTiming": null
     },
@@ -6248,8 +6248,8 @@
     "currentStrength": "300",
     "slot": {
       "name": "C2",
-      "lectureTiming": "208000900,308000900,508000900",
-      "lectureTimingStr": "TWF 08:00-09:00",
+      "lectureTiming": "208000900,308000900",
+      "lectureTimingStr": "TW 08:00-09:00",
       "tutorialTiming": null,
       "labTiming": null
     },
